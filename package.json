@@ -1,0 +1,25 @@
+{
+  "name": "js-hw28",
+  "version": "1.0.0",
+  "description": "",
+  "type": "module",
+  "browserslist": "> 0.5%, last 2 versions, not dead",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "npx parcel src/index.html",
+    "build": "parcel build src/index.html --public-url /js-hw28/",
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d dist"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "parcel": "^2.16.4"
+  },
+  "dependencies": {
+    "gh-pages": "^6.3.0",
+    "handlebars": "^4.7.9",
+    "parcel-plugin-handlebars-precompile": "^1.0.2"
+  }
+}
