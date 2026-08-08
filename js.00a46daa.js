@@ -11186,18 +11186,18 @@ const templateFunction = _handlebars.default.template({
           "column": 25
         }
       }
-    }) : helper)) + "</h2> \r\n<p class=\"price\">Price: " + alias4((helper = (helper = lookupProperty(helpers, "price") || (depth0 != null ? lookupProperty(depth0, "price") : depth0)) != null ? helper : alias2, typeof helper === alias3 ? helper.call(alias1, {
+    }) : helper)) + "</h2> \r\n<p class=\"price\">Ціна: " + alias4((helper = (helper = lookupProperty(helpers, "price") || (depth0 != null ? lookupProperty(depth0, "price") : depth0)) != null ? helper : alias2, typeof helper === alias3 ? helper.call(alias1, {
       "name": "price",
       "hash": {},
       "data": data,
       "loc": {
         "start": {
           "line": 5,
-          "column": 24
+          "column": 23
         },
         "end": {
           "line": 5,
-          "column": 33
+          "column": 32
         }
       }
     }) : helper)) + "</p> \r\n<p class=\"description\">" + alias4((helper = (helper = lookupProperty(helpers, "description") || (depth0 != null ? lookupProperty(depth0, "description") : depth0)) != null ? helper : alias2, typeof helper === alias3 ? helper.call(alias1, {
@@ -11249,38 +11249,65 @@ var _default = exports.default = templateFunction;
 },{"handlebars/dist/handlebars.runtime":"../node_modules/handlebars/dist/handlebars.runtime.js"}],"js/index.js":[function(require,module,exports) {
 "use strict";
 
-var _handlebars = _interopRequireDefault(require("handlebars"));
+var _handlebars = _interopRequireWildcard(require("handlebars"));
 var _data = require("./data");
 var _template = _interopRequireDefault(require("../templates/template.hbs"));
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
+function _interopRequireWildcard(e, t) { if ("function" == typeof WeakMap) var r = new WeakMap(), n = new WeakMap(); return (_interopRequireWildcard = function (e, t) { if (!t && e && e.__esModule) return e; var o, i, f = { __proto__: null, default: e }; if (null === e || "object" != typeof e && "function" != typeof e) return f; if (o = t ? n : r) { if (o.has(e)) return o.get(e); o.set(e, f); } for (const t in e) "default" !== t && {}.hasOwnProperty.call(e, t) && ((i = (o = Object.defineProperty) && Object.getOwnPropertyDescriptor(e, t)) && (i.get || i.set) ? o(f, t, i) : f[t] = e[t]); return f; })(e, t); }
 const formRef = document.querySelector("#bookmarkForm");
 const loginRef = document.querySelector("#userForm");
 const inputRef = document.querySelector("#bookmarkInput");
 const btnRef = document.querySelector("#addBookmarkBtn");
 const listRef = document.querySelector("#bookmarkList");
 const productsBoxRef = document.querySelector(".products__box");
+const savedData = localStorage.getItem("bookmarks");
+const bookmarksData = savedData ? JSON.parse(savedData) : [];
+function createBookmark(mark) {
+  const item = `<li class="bookmark__item">
+  <a href="${mark}" target="_blank">${mark}</a>
+  <button type="button" class="delete">X</button>
+  </li>`;
+  listRef.insertAdjacentHTML("afterbegin", item);
+  inputRef.value = "";
+}
+bookmarksData.forEach(({
+  bookmark
+}) => createBookmark(bookmark));
 formRef.addEventListener("submit", evt => {
   evt.preventDefault();
-  const bookmark = inputRef.value;
+  const bookmark = inputRef.value.trim();
   if (bookmark !== "") {
     const data = {
       bookmark: bookmark
     };
-    const jsonData = JSON.stringify(data);
-    console.log(jsonData);
-    const item = `<li class="bookmark__item">
-        <a href="${bookmark}" target="_blank">${bookmark}</a>
-        <button type="button" class="delete">X</button>
-        </li>`;
-    listRef.insertAdjacentHTML("afterbegin", item);
-    inputRef.value = "";
+    bookmarksData.push(data);
+    localStorage.setItem("bookmarks", JSON.stringify(bookmarksData));
+    createBookmark(bookmark);
   }
 });
 listRef.addEventListener("click", evt => {
   if (evt.target.classList.contains("delete")) {
     const itemToDelete = evt.target.closest(".bookmark__item");
     if (itemToDelete) {
+      const urlToRemove = itemToDelete.querySelector("a").getAttribute("href");
+      const index = bookmarksData.findIndex(item => item.bookmark === urlToRemove);
+      if (index !== -1) {
+        bookmarksData.splice(index, 1);
+        localStorage.setItem("bookmarks", JSON.stringify(bookmarksData));
+      }
       itemToDelete.remove();
+    }
+  }
+});
+document.addEventListener("DOMContentLoaded", () => {
+  const savedData = localStorage.getItem("loginData");
+  if (savedData) {
+    try {
+      const parsedData = JSON.parse(savedData);
+      loginRef.elements.name.value = parsedData.userName || "";
+      loginRef.elements.password.value = parsedData.userPassword || "";
+    } catch (error) {
+      console.error("Помилка парсингу даних з localStorage:", error);
     }
   }
 });
@@ -11292,7 +11319,8 @@ loginRef.addEventListener("submit", evt => {
     userPassword: inputElem.password.value
   };
   const jsonLoginData = JSON.stringify(loginData);
-  console.log(jsonLoginData);
+  localStorage.setItem("loginData", jsonLoginData);
+  console.log("Збережено:", jsonLoginData);
   evt.currentTarget.reset();
 });
 const searchInputRef = document.querySelector("#search-input");
@@ -11340,7 +11368,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "62317" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "50865" + '/');
   ws.onmessage = function (event) {
     checkedAssets = {};
     assetsToAccept = [];
